@@ -1,4 +1,4 @@
-"""Inspect an epub's structure before parsing.
+"""ls
 
 Usage: python inspect_epub.py book.epub > inspect.txt
 """
@@ -7,6 +7,12 @@ import sys
 import ebooklib
 from ebooklib import epub
 from bs4 import BeautifulSoup
+
+# To disable a parsing warning beautiful soup generates
+from bs4 import XMLParsedAsHTMLWarning
+import warnings
+
+warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 
 def flatten_toc(toc, depth=0):
@@ -62,4 +68,6 @@ def main(path):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    from contextlib import redirect_stdout
+    with open("inspect.txt", "w", encoding="utf-8", newline="\n") as f, redirect_stdout(f):
+        main(sys.argv[1])
